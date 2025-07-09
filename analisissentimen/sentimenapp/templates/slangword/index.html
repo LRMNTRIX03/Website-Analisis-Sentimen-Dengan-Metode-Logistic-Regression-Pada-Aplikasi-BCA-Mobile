@@ -1,0 +1,169 @@
+{% extends "dashboard/dashboard.html" %}
+{% load static %}
+
+{% block content %}
+{% if messages %}
+
+{% for message in messages %}
+    <div class="bg-success border border-success-content text-success-content px-4 py-3 rounded-lg mb-4">
+        {{ message }}
+    </div>
+{% endfor %}
+
+{% endif %}
+<div class="flex flex-col md:flex-row justify-between gap-2 md:gap-0 items-start md:items-center bg-base-100 rounded-lg shadow-sm border border-base-300 p-6 mb-6">
+    <div>
+        <h1 class="text-2xl font-bold text-base-content mb-2">Slangword</h1>
+        <p class="text-base-content/70">Kelola daftar slangword dan kata formal</p>
+    </div>
+    <a onclick="modalTambah.showModal()" class="btn btn-primary flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
+            <path stroke="none" d="M0 0h24v24H0z" />
+            <path d="M12 5v14M5 12h14" />
+        </svg>
+        Tambah Slangword
+    </a>
+</div>
+<div class="p-6 border-b border-base-300">
+            <h2 class="text-xl font-bold text-base-content">Form Upload File Slangwords</h2>
+        <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+    <div class="mb-6">
+        <div class="mb-5">
+            <label class="block text-sm font-semibold text-base-content mb-3">File CSV</label>
+            <input type="file" name="slangword" accept=".csv"
+                   class="block w-full text-sm text-base-content/70 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary/10 file:text-primary hover:file:bg-primary/20 border border-base-300 rounded-lg p-3">
+            <p class="text-sm text-base-content/60 mt-2 flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                </svg>
+                Hanya file dengan format CSV yang diperbolehkan
+            </p>
+        </div>
+
+        <div class="flex justify-start">
+            <button type="submit" class="btn btn-primary flex items-center transition-colors duration-200 shadow-sm hover:shadow-md" name="slangword">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                </svg>
+                Upload Data
+            </button>
+        </div>
+    </div>
+    </form>
+</div>
+
+<div class="bg-base-100 rounded-xl border border-base-300 shadow-sm">
+    <div class="p-6 border-b border-base-300">
+        <h2 class="text-xl font-bold text-base-content">Daftar Slangword</h2>
+        <p class="text-sm text-base-content/60 mt-1">Mapping slangword ke kata formal untuk normalisasi teks</p>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-base-200">
+                <tr>
+                    <th class="px-6 py-4">No</th>
+                    <th class="px-6 py-4">Kata Baku</th>
+                    <th class="px-6 py-4">Kata Tidak Baku</th>
+                    <th class="px-6 py-4">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="bg-base-100 divide-y divide-base-300">
+                {% for slangword in page_obj %}
+                <tr class="hover:bg-base-200 transition-colors duration-150">
+                    <td class="px-6 py-4">{{ forloop.counter0|add:page_obj.start_index }}</td>
+                    <td class="px-6 py-4">{{ slangword.katabaku }}</td>
+                    <td class="px-6 py-4">{{ slangword.katatidakbaku }}</td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-2">
+                            <a onclick="document.getElementById('modalEdit{{ slangword.id }}').showModal()" class="text-blue-600 cursor-pointer">Edit</a>
+                            <a onclick="document.getElementById('modalDelete{{ slangword.id }}').showModal()" class="text-red-600 cursor-pointer">Hapus</a>
+                        </div>
+
+                        <!-- Modal Edit -->
+                        <dialog id="modalEdit{{ slangword.id }}" class="modal">
+                            <div class="modal-box">
+                                <h3 class="font-bold text-lg mb-4">Edit Slangword</h3>
+                                <form method="POST" action="{% url 'sentimen.slangword.edit' slangword.id %}">
+                                    {% csrf_token %}
+                                    <input type="text" name="katabaku" value="{{ slangword.katabaku }}" class="input input-bordered w-full mb-3" required>
+                                    <input type="text" name="katatidakbaku" value="{{ slangword.katatidakbaku }}" class="input input-bordered w-full mb-4" required>
+                                    <div class="modal-action">
+                                        <button type="submit" class="btn btn-primary">Simpan</button>
+                                        <button type="button" onclick="document.getElementById('modalEdit{{ slangword.id }}').close()" class="btn">Batal</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </dialog>
+
+                        <!-- Modal Delete -->
+                        <dialog id="modalDelete{{ slangword.id }}" class="modal">
+                            <div class="modal-box">
+                                <h3 class="font-bold text-lg text-error mb-4">Konfirmasi Hapus</h3>
+                                <p class="mb-4">Yakin ingin menghapus <strong>{{ slangword.katatidakbaku }}</strong>?</p>
+                                <form method="POST" action="{% url 'sentimen.slangword.delete' slangword.id %}">
+                                    {% csrf_token %}
+                                    <div class="modal-action">
+                                        <button type="submit" class="btn btn-error">Hapus</button>
+                                        <button type="button" onclick="document.getElementById('modalDelete{{ slangword.id }}').close()" class="btn">Batal</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </dialog>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="px-6 py-4 text-center">Data belum tersedia.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="px-6 py-4 border-t border-base-300 flex items-center justify-between">
+        <div class="text-sm text-base-content/60">
+            Menampilkan {{ page_obj.start_index }} - {{ page_obj.end_index }} dari {{ page_obj.paginator.count }} data
+        </div>
+        <div class="flex items-center space-x-1">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 text-sm hover:text-primary text-base-content/60">Previous</a>
+            {% else %}
+            <span class="px-3 py-1 text-sm text-base-content/30 cursor-not-allowed">Previous</span>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <span class="px-3 py-1 text-sm bg-primary text-primary-content rounded">{{ num }}</span>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?page={{ num }}" class="px-3 py-1 text-sm hover:text-primary text-base-content/70">{{ num }}</a>
+            {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 text-sm hover:text-primary text-base-content/60">Next</a>
+            {% else %}
+            <span class="px-3 py-1 text-sm text-base-content/30 cursor-not-allowed">Next</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal Tambah -->
+<dialog id="modalTambah" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg mb-4">Tambah Slangword</h3>
+        <form method="POST" action="{% url 'sentimen.slangword.create' %}">
+            {% csrf_token %}
+            <input type="text" name="katabaku" placeholder="Kata baku..." class="input input-bordered w-full mb-3" required>
+            <input type="text" name="katatidakbaku" placeholder="Kata tidak baku..." class="input input-bordered w-full mb-4" required>
+            <div class="modal-action">
+                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="button" onclick="modalTambah.close()" class="btn">Batal</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+{% endblock %}

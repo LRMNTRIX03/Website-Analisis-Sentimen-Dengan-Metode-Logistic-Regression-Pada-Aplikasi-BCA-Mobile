@@ -1,0 +1,129 @@
+{% extends "dashboard/dashboard.html" %}
+{% load static %}
+
+{% block title %}Upload File CSV{% endblock %}
+
+{% block content %}
+<div class="bg-base-100 rounded-lg shadow-sm border border-base-300 p-6 mb-6">
+    <h1 class="text-2xl font-bold text-base-content mb-2">Upload File CSV</h1>
+    <p class="text-base-content/70">Pilih file CSV yang berisi data teks untuk dianalisis</p>
+</div>
+
+{% if messages %}
+<div class="mb-6">
+    {% for message in messages %}
+    <div class="bg-{% if message.tags == 'success' %}success{% elif message.tags == 'error' %}error{% else %}info{% endif %} border border-{% if message.tags == 'success' %}success{% elif message.tags == 'error' %}error{% else %}info{% endif %} text-{% if message.tags == 'success' %}success-content{% elif message.tags == 'error' %}error-content{% else %}info-content{% endif %} px-4 py-3 rounded-lg mb-4">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="bg-base-100 rounded-lg shadow-sm border border-base-300 p-6 mb-6">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-6">
+            <label class="block text-sm font-semibold text-base-content mb-3">File CSV</label>
+            <input type="file" name="csv_file" accept=".csv"
+                   class="block w-full text-sm text-base-content/70 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary/10 file:text-primary hover:file:bg-primary/20 border border-base-300 rounded-lg p-3">
+            <p class="text-sm text-base-content/60 mt-2 flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                </svg>
+                Hanya file dengan format CSV yang diperbolehkan
+            </p>
+        </div>
+
+        <div class="flex justify-start">
+            <button type="submit" class="btn btn-primary flex items-center transition-colors duration-200 shadow-sm hover:shadow-md">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                </svg>
+                Upload Data
+            </button>
+        </div>
+    </form>
+</div>
+
+
+<!-- Table -->
+{% if csv_rows %}
+<div class="bg-base-100 rounded-xl border border-base-300 shadow-sm">
+    <div class="p-6 border-b border-base-300">
+        <h2 class="text-xl font-bold text-base-content">Data dari Database</h2>
+            <form method="post">
+            {% csrf_token %}
+            <div class="flex justify-end">
+                <button type="submit" name="drop" class="btn btn-error"
+                    onclick="return confirm('Apakah Anda yakin ingin menghapus seluruh data?')">
+                    Hapus Table
+                </button>
+            </div>
+        </form>
+        <p class="text-sm text-base-content/60 mt-1">
+            Total: <span class="font-medium">{{ data_count }}</span> data
+            <span class="text-base-content/40">|</span>
+            Page <span class="font-medium">{{ page_obj.number }}</span> of <span class="font-medium">{{ page_obj.paginator.num_pages }}</span>
+        </p>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-base-200">
+                <tr>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-base-content/70 uppercase tracking-wider">No</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-base-content/70 uppercase tracking-wider">Teks</th>
+                </tr>
+            </thead>
+            <tbody class="bg-base-100 divide-y divide-base-300">
+                {% for row in csv_rows %}
+                <tr class="hover:bg-base-200 transition-colors duration-150">
+                    <td class="px-6 py-4 text-sm font-medium text-base-content">
+                        {{ forloop.counter0|add:page_obj.start_index }}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-base-content">
+                        <div class="max-w-4xl truncate" title="{{ row.teks }}">{{ row.teks|default:"-" }}</div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="px-6 py-4 bg-base-100 rounded-xl border border-base-300 shadow-sm flex items-center justify-between">
+        <div class="text-sm text-base-content/60">
+            Menampilkan {{ page_obj.start_index }}–{{ page_obj.end_index }} dari {{ page_obj.paginator.count }} data
+        </div>
+        <div class="flex items-center space-x-2">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 text-sm text-base-content/70 hover:text-base-content">Previous</a>
+            {% else %}
+                <span class="px-3 py-1 text-sm text-base-content/30 cursor-not-allowed">Previous</span>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <span class="px-3 py-1 text-sm bg-primary text-primary-content rounded">{{ num }}</span>
+                {% elif num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
+                    <a href="?page={{ num }}" class="px-3 py-1 text-sm text-base-content/70 hover:text-base-content">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 text-sm text-base-content/70 hover:text-base-content">Next</a>
+            {% else %}
+                <span class="px-3 py-1 text-sm text-base-content/30 cursor-not-allowed">Next</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="bg-base-100 rounded-xl border border-base-300 shadow-sm">
+    <div class="p-12 text-center">
+        <svg class="mx-auto h-12 w-12 text-base-content/40 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        <h3 class="text-lg font-medium text-base-content mb-2">Belum Ada Data</h3>
+        <p class="text-base-content/60">Upload file CSV untuk melihat data di tabel</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

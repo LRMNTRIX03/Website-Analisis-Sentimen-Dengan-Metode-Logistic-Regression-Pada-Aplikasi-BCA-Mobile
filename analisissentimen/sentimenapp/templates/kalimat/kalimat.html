@@ -1,0 +1,60 @@
+{% extends "dashboard/dashboard.html" %}
+{% load static %}
+
+{% block title %}Upload File CSV{% endblock %}
+
+{% block content %}
+<div class="bg-base-100 rounded-lg shadow-sm border border-base-300 p-6 mb-6">
+    <h1 class="text-2xl font-bold text-base-content mb-2">Test Kalimat</h1>
+    <p class="text-base-content/70">Silakan masukan kalimat review dari Aplikasi BCA Mobile</p>
+</div>
+
+{% if messages %}
+<div class="mb-6">
+    {% for message in messages %}
+    <div class="bg-{% if message.tags == 'success' %}success{% elif message.tags == 'error' %}error{% else %}info{% endif %} border border-{% if message.tags == 'success' %}success{% elif message.tags == 'error' %}error{% else %}info{% endif %} text-{% if message.tags == 'success' %}success-content{% elif message.tags == 'error' %}error-content{% else %}info-content{% endif %} px-4 py-3 rounded-lg mb-4">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="bg-base-100 rounded-lg shadow-sm border border-base-300 p-6 mb-6">
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-6">
+            <label class="block text-sm font-semibold text-base-content mb-3">Kalimat</label>
+            <input type="text" name="kalimat" id="kalimat" class="block w-full text-sm text-base-content/70 border border-base-300 rounded-lg p-3">
+        </div>
+
+        <div class="flex justify-start">
+            <button type="submit" class="btn btn-primary flex items-center transition-colors duration-200 shadow-sm hover:shadow-md">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                </svg>
+                Test Kalimat
+            </button>
+        </div>
+    </form>
+
+    {% if prediction %}
+
+    <div class="bg-base-100 rounded-lg shadow-sm border border-base-300 p-6 mb-6">
+        <h2 class="text-xl font-bold text-base-content mb-2">Hasil Prediksi</h2>
+        <p class="text-base-content/70">Kalimat: <span class="font-medium">{{ prediction.kalimat }}</span></p>
+        {% if prediction.sentimen == "positif" %}
+        <p class="text-base-content/70">Sentimen: <span class="badge badge-success text-white font-medium">Positif</span></p>
+        {% elif prediction.sentimen == "negatif" %}
+        <p class="text-base-content/70">Sentimen: <span class="badge badge-error text-white font-medium">Negatif</span></p>
+        {% else %}
+        <p class="text-base-content/70">Sentimen: <span class="badge badge-warning text-white font-medium">Netral</span></p>
+        {% endif %}
+        
+    </div>
+
+    {% endif %}
+</div>
+
+
+
+{% endblock %}

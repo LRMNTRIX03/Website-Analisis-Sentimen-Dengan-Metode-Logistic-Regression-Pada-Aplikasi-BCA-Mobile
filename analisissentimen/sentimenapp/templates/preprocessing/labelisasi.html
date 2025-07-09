@@ -1,0 +1,114 @@
+{% extends "dashboard/dashboard.html" %}
+{% load static %}
+
+{% block content %}
+<div class="flex flex-col bg-base-100 rounded-lg shadow-sm border border-base-300 p-6 mb-6">
+    <h1 class="text-2xl font-bold text-base-content mb-2">Pelabelan Teks Bersih</h1>
+    <p class="text-base-content/70">Menampilkan hasil teks yang sudah dipreprocessing dan hasil pelabelan sentimen.</p>
+    
+    {% if message %}
+    <div class="alert {% if 'Gagal' in message %}alert-error{% else %}alert-success{% endif %} mt-4">
+        {{ message }}
+    </div>
+    {% endif %}
+
+    <form action="{% url 'sentimen.labelisasi' %}" method="post" onsubmit="showLoading()">
+        {% csrf_token %}
+        <div id="loading-spinner" class="hidden mt-4 flex items-center space-x-2 text-sm text-base-content/60">
+            <span class="loading loading-spinner loading-sm text-primary"></span>
+            <span>Memulai pelabelan, mohon tunggu...</span>
+        </div>
+        <div class="flex flex-col">
+            <button id="label-btn" class="btn btn-primary py-2 px-4 rounded mt-4 transition-colors duration-200" type="submit">
+                Mulai Pelabelan Ulang
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="bg-base-100 rounded-xl border border-base-300 shadow-sm">
+    <div class="p-6 border-b border-base-300">
+        <h2 class="text-xl font-bold text-base-content">Hasil Teks Bersih dan Label Sentimen</h2>
+        <p class="text-sm text-base-content/60 mt-1">Tabel ini menampilkan teks yang sudah dibersihkan dari proses preprocessing dan label sentimen yang dihasilkan.</p>
+    </div>
+    
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-base-200">
+                <tr>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-base-content/70 uppercase tracking-wider">No</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-base-content/70 uppercase tracking-wider">Teks Bersih</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-base-content/70 uppercase tracking-wider">Label</th>
+                </tr>
+            </thead>
+            <tbody class="bg-base-100 divide-y divide-base-300">
+                {% if page_obj %}
+                    {% for item in page_obj %}
+                    <tr class="hover:bg-base-200 transition-colors duration-150">
+                        <td class="px-6 py-4">{{ forloop.counter0|add:page_obj.start_index }}</td>
+                        <td class="px-6 py-4">{{ item.text_bersih }}</td>
+                        <td class="px-6 py-4">
+                            {% if item.label == 'positif' %}
+                                <span class="badge badge-success">Positif</span>
+                            {% elif item.label == 'negatif' %}
+                                <span class="badge badge-error">Negatif</span>
+                            {% elif item.label == 'netral' %}
+                                <span class="badge badge-info">Netral</span>
+                            {% else %}
+                                <span class="badge badge-warning">Tidak Diketahui</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center py-4">Tidak ada data untuk ditampilkan.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if page_obj.has_other_pages %}
+    <div class="flex justify-center mt-4 pb-4"> {# Added pb-4 for bottom padding #}
+        <div class="join">
+            {% if page_obj.has_previous %}
+                <a href="?page=1" class="join-item btn btn-sm">First</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="join-item btn btn-sm">«</a>
+            {% else %}
+                <button class="join-item btn btn-sm btn-disabled">First</button>
+                <button class="join-item btn btn-sm btn-disabled">«</button>
+            {% endif %}
+
+            <button class="join-item btn btn-sm btn-disabled">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </button>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="join-item btn btn-sm">»</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" class="join-item btn btn-sm">Last</a>
+            {% else %}
+                <button class="join-item btn btn-sm btn-disabled">»</button>
+                <button class="join-item btn btn-sm btn-disabled">Last</button>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    {# Removed redundant pagination/display info at the bottom, as it's handled by the main pagination #}
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function showLoading(){
+        const loading = document.getElementById('loading-spinner');
+        loading.classList.remove('hidden');
+        // Nonaktifkan tombol agar tidak bisa diklik lagi
+        document.getElementById('label-btn').disabled = true; // Changed ID to 'label-btn'
+        // Opsional: ubah teks tombol
+        document.getElementById('label-btn').innerText = "Memproses..."; // Changed ID to 'label-btn'
+    }
+</script>
+{% endblock %}

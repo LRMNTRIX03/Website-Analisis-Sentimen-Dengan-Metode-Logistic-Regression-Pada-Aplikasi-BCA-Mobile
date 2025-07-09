@@ -1,0 +1,179 @@
+<aside class="hidden md:flex flex-col w-1/5 bg-base-100 border-r border-base-300" id="sidebar">
+    <div class="p-4 border-b border-base-300">
+        <h1 class="text-xl font-bold text-base-content">Analisis Sentimen</h1>
+        <p class="text-sm text-base-content/70">Dashboard System</p>
+    </div>
+    
+    
+    <div class="flex-1 p-4">
+        <ul class="space-y-2">
+            <li>
+                <a href="{% url 'sentimen.index' %}" class="flex items-center gap-3 
+                 p-3 rounded-lg transition-all duration-200
+                            {% if request.resolver_match.url_name == 'sentimen.index' %}
+                                bg-primary/10 text-primary border-l-4 border-primary
+                            {% else %}
+                                hover:bg-base-200 text-base-content/70 hover:text-base-content
+                            {% endif %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-home">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
+                        <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+                        <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+                    </svg>
+                    <span class="font-medium">Dashboard</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="{% url 'sentimen.inputdata' %}" class="flex items-center gap-3 
+                 p-3 rounded-lg transition-all duration-200
+                            {% if request.resolver_match.url_name == 'sentimen.inputdata' %}
+                                bg-primary/10 text-primary border-l-4 border-primary
+                            {% else %}
+                                hover:bg-base-200 text-base-content/70 hover:text-base-content
+                            {% endif %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-file">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M12 2l.117 .007a1 1 0 0 1 .876 .876l.007 .117v4l.005 .15a2 2 0 0 0 1.838 1.844l.157 .006h4l.117 .007a1 1 0 0 1 .876 .876l.007 .117v9a3 3 0 0 1 -2.824 2.995l-.176 .005h-10a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-14a3 3 0 0 1 2.824 -2.995l.176 -.005h5z" />
+                        <path d="M19 7h-4l-.001 -4.001z" />
+                    </svg>
+                    <span class="font-medium">Input Data</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="{% url 'sentimen.stopword' %}" class="flex items-center gap-3 
+                 p-3 rounded-lg transition-all duration-200
+                            {% if request.resolver_match.url_name == 'sentimen.stopword' or request.resolver_match.url_name == 'sentimen.stopword.edit' or request.resolver_match.url_name == 'sentimen.stopword.create' %}
+                                bg-primary/10 text-primary border-l-4 border-primary
+                            {% else %}
+                                hover:bg-base-200 text-base-content/70 hover:text-base-content
+                            {% endif %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-ban">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <circle cx="12" cy="12" r="9" />
+                        <path d="m5.7 5.7l12.6 12.6" />
+                    </svg>
+                    <span class="font-medium">Stopword Kata</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="{% url 'sentimen.slangword' %}" class="flex items-center gap-3 
+                 p-3 rounded-lg transition-all duration-200
+                            {% if request.resolver_match.url_name == 'sentimen.slangword' %}
+                                bg-primary/10 text-primary border-l-4 border-primary
+                            {% else %}
+                                hover:bg-base-200 text-base-content/70 hover:text-base-content
+                            {% endif %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-hash">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M5 9l14 0" />
+                        <path d="M5 15l14 0" />
+                        <path d="M11 4l-4 16" />
+                        <path d="M17 4l-4 16" />
+                    </svg>
+                    <span class="font-medium">Slangword</span>
+                </a>
+            </li>
+            
+            <li x-data="{ 
+                open: {% if request.resolver_match.url_name == 'sentimen.preprocessing' or request.resolver_match.url_name == 'sentimen.klasifikasi' or request.resolver_match.url_name == 'sentimen.tfidf' or request.resolver_match.url_name == 'sentimen.evaluasi' or request.resolver_match.url_name == 'sentimen.labelisasi' %}true{% else %}false{% endif %}
+                
+            }" class="relative">
+                <button @click="open = !open" class="w-full flex items-center gap-3 
+                 p-3 rounded-lg transition-all duration-200 hover:bg-base-200 text-base-content/70 hover:text-base-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-settings">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+                    <span class="font-medium flex-1 text-left">Proses</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-200" :class="{ 'rotate-180': open }">
+                        <path d="m6 9l6 6l6-6"/>
+                    </svg>
+                </button>
+                
+                <div x-show="open" 
+                     x-cloak
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 transform scale-95"
+                     x-transition:enter-end="opacity-100 transform scale-100"
+                     x-transition:leave="transition ease-in duration-150"
+                     x-transition:leave-start="opacity-100 transform scale-100"
+                     x-transition:leave-end="opacity-0 transform scale-95"
+                     class="mt-1 w-full bg-base-100 border border-base-300 rounded-lg shadow-lg overflow-hidden">
+                    <a href="{% url 'sentimen.preprocessing' %}" class="block px-4 py-2 text-sm transition-all duration-200
+                                {% if request.resolver_match.url_name == 'sentimen.preprocessing' %}
+                                    bg-primary/10 text-primary font-medium
+                                {% else %}
+                                    text-base-content/70 hover:bg-base-200 hover:text-base-content
+                                {% endif %}">
+                        Preprocessing
+                    </a>
+                    <a href="{% url 'sentimen.labelisasi' %}" class="block px-4 py-2 text-sm transition-all duration-200
+                                {% if request.resolver_match.url_name == 'sentimen.labelisasi' %}
+                                    bg-primary/10 text-primary font-medium
+                                {% else %}
+                                    text-base-content/70 hover:bg-base-200 hover:text-base-content
+                                {% endif %}">
+                        Labelisasi
+                    </a>
+                    <a href="{% url 'sentimen.tfidf' %}" class="block px-4 py-2 text-sm transition-all duration-200
+                                {% if request.resolver_match.url_name == 'sentimen.tfidf' %}
+                                    bg-primary/10 text-primary font-medium
+                                {% else %}
+                                    text-base-content/70 hover:bg-base-200 hover:text-base-content
+                                {% endif %}">
+                        TF-IDF
+                    </a>
+                          <a href="{% url 'sentimen.klasifikasi' %}" class="block px-4 py-2 text-sm transition-all duration-200
+                                {% if request.resolver_match.url_name == 'sentimen.klasifikasi' %}
+                                    bg-primary/10 text-primary font-medium
+                                {% else %}
+                                    text-base-content/70 hover:bg-base-200 hover:text-base-content
+                                {% endif %}">
+                        Klasifikasi
+                    </a>
+                    <a href="{% url 'sentimen.evaluasi' %}" class="block px-4 py-2 text-sm transition-all duration-200
+                                {% if request.resolver_match.url_name == 'sentimen.evaluasi' %}
+                                    bg-primary/10 text-primary font-medium
+                                {% else %}
+                                    text-base-content/70 hover:bg-base-200 hover:text-base-content
+                                {% endif %}">
+                        Evaluasi Model
+                    </a>
+                </div>
+            </li>
+               <li>
+                <a href="{% url 'sentimen.kalimat' %}" class="flex items-center gap-3 
+                 p-3 rounded-lg transition-all duration-200
+                            {% if request.resolver_match.url_name == 'sentimen.kalimat' %}
+                                bg-primary/10 text-primary border-l-4 border-primary
+                            {% else %}
+                                hover:bg-base-200 text-base-content/70 hover:text-base-content
+                            {% endif %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-ban">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <circle cx="12" cy="12" r="9" />
+                        <path d="m5.7 5.7l12.6 12.6" />
+                    </svg>
+                    <span class="font-medium">Test Kalimat</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="p-4 border-t border-base-300">
+        <a href="{% url 'logout' %}" class="flex items-center gap-3 p-3 rounded-lg transition-all duration-200 hover:bg-error/10 text-base-content/70 hover:text-error">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-logout">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
+                <path d="M9 12h12l-3 -3" />
+                <path d="M18 15l3 -3" />
+            </svg>
+            <span class="font-medium">Logout</span>
+        </a>
+    </div>
+</aside>

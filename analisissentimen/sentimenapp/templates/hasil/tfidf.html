@@ -1,0 +1,44 @@
+{% extends "dashboard/dashboard.html" %}
+{% load static %}
+
+{% block content %}
+<div class="flex flex-col bg-base-100 rounded-lg shadow-sm border border-base-300 p-6 mb-6">
+    <h1 class="text-2xl font-bold text-base-content mb-2">TF-IDF Output</h1>
+    <p class="text-base-content/70">Menampilkan hasil bobot TF-IDF dari 10 dokumen pertama yang telah diproses.</p>
+</div>
+
+<div class="bg-base-100 rounded-xl border border-base-300 shadow-sm">
+    <div class="p-6 border-b border-base-300">
+        <h2 class="text-xl font-bold text-base-content">Hasil TF-IDF 10 Dokumen Pertama</h2>
+        <p class="text-sm text-base-content/60 mt-1">Berikut ini adalah daftar kata dan bobot TF-IDF-nya dari setiap dokumen</p>
+    </div>
+
+    <div class="p-6 overflow-x-auto space-y-8">
+        {% for doc in tfidf_display %}
+            <div>
+                <h3 class="text-lg font-semibold text-base-content mb-2">📄 Dokumen {{ doc.doc_index }}</h3>
+                <table class="table w-full text-sm border">
+                    <thead class="bg-base-200 text-base-content/70">
+                        <tr>
+                            <th class="px-4 py-2 text-left uppercase">Kata</th>
+                            <th class="px-4 py-2 text-left uppercase">Bobot TF-IDF</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-base-300">
+                        {% for f in doc.features %}
+                        <tr>
+                            <td class="px-4 py-2">{{ f.term }}</td>
+                            <td class="px-4 py-2">{{ f.score }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if not tfidf_display %}
+        <div class="text-center text-sm text-red-500 p-6">Belum ada hasil TF-IDF yang bisa ditampilkan.</div>
+    {% endif %}
+</div>
+{% endblock %}

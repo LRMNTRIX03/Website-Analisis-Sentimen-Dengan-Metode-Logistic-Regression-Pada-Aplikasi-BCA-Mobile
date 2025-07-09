@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {%load static%}
+    <link rel="stylesheet" href="{% static 'dist/output.css' %}">
+    <title>{% block title %}{{title}}{% endblock %}</title>
+</head>
+
+<body class="font-poppins">
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div> 
+</body>
+{% block scripts %}
+<script>
+    function showLoading() {
+        // Tampilkan loading spinner
+        document.getElementById('loading-spinner').classList.remove('hidden');
+        // Nonaktifkan tombol agar tidak bisa diklik lagi
+        document.getElementById('preprocess-btn').disabled = true;
+        // Opsional: ubah teks tombol
+        document.getElementById('preprocess-btn').innerText = "Memproses...";
+    }
+</script>
+
+{% endblock %}
+</html>

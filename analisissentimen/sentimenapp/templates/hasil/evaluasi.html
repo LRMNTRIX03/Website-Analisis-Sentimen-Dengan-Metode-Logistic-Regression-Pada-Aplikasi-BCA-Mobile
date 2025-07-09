@@ -1,0 +1,48 @@
+{% extends "dashboard/dashboard.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+<div class="flex flex-col bg-base-100 rounded-lg shadow-sm border border-base-300 p-6 mb-6">
+    <h1 class="text-2xl font-bold text-base-content mb-2">Evaluasi Model</h1>
+    <p class="text-base-content/70">Confusion Matrix hasil evaluasi model klasifikasi sentimen</p>
+</div>
+
+<div class="bg-base-100 rounded-xl border border-base-300 shadow-sm">
+    <div class="p-6 border-b border-base-300">
+        <h2 class="text-xl font-bold text-base-content">📊 Confusion Matrix (Persentase)</h2>
+        <p class="text-sm text-base-content/60 mt-1">Matriks perbandingan label aktual dan prediksi model dalam bentuk persentase.</p>
+    </div>
+
+    {% if confusion_matrix and labels_class %}
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm text-center">
+            <thead class="bg-base-200">
+                <tr>
+                    <th class="px-6 py-4 text-xs font-medium text-base-content/70 uppercase tracking-wider">Actual \ Predicted</th>
+                    {% for label in labels_class %}
+                        <th class="px-6 py-4 text-xs font-medium text-base-content/70 uppercase tracking-wider">{{ label }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody class="bg-base-100 divide-y divide-base-300">
+                {% for row_label, row in labels_class|zip_lists:confusion_matrix %}
+                    <tr class="hover:bg-base-200 transition-colors duration-150">
+                        <td class="px-6 py-4 font-medium text-base-content">{{ row_label }}</td>
+                        {% for val in row %}
+                            <td class="px-6 py-4 text-base-content/80">{{ val }}%</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="p-6">
+        <div class="alert alert-warning text-base-content">
+            Data Confusion Matrix belum tersedia. Silakan lakukan proses klasifikasi terlebih dahulu.
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

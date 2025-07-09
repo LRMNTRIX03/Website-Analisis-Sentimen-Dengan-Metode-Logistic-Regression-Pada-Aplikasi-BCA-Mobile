@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth" x-data="{
+        theme: localStorage.getItem('theme') || 'cupcake',
+        init() {
+            this.$watch('theme', value => {
+                localStorage.setItem('theme', value);
+            });
+        }
+      }"
+      :data-theme="theme"
+      x-init="init()"
+      x-cloak="true">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'dist/output.css' %}">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
+</head>
+
+<body class="font-poppins bg-base-100 text-base-content ">
+    
+    <div class="fixed inset-0 z-50 flex h-screen">
+        {% include 'dashboard/sidebar.html' %}
+        <main class="relative w-full md:w-4/5 overflow-y-auto">
+            <div class="border-b border-base-300 " >
+                <div class="flex justify-end px-6 py-4">
+            <select class="select select-ghost" x-model="theme">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="cupcake">Cupcake</option>
+                <option value="bumblebee">Bumblebee</option>
+                <option value="emerald">Emerald</option>
+                <option value="corporate">Corporate</option>
+                <option value="synthwave">Synthwave</option>
+                <option value="retro">Retro</option>
+                <option value="cyberpunk">Cyberpunk</option>
+                <option value="valentine">Valentine</option>
+                <option value="halloween">Halloween</option>
+                <option value="garden">Garden</option>
+                <option value="forest">Forest</option>
+                <option value="aqua">Aqua</option>
+                <option value="lofi">Lofi</option>
+                <option value="pastel">Pastel</option>
+                <option value="fantasy">Fantasy</option>
+                <option value="wireframe">Wireframe</option>
+                <option value="black">Black</option>
+                <option value="luxury">Luxury</option>
+                <option value="dracula">Dracula</option>
+                <option value="cmyk">CMYK</option>
+                <option value="autumn">Autumn</option>
+                <option value="business">Business</option>
+                <option value="acid">Acid</option>
+                <option value="lemonade">Lemonade</option>
+                <option value="night">Night</option>
+                <option value="coffee">Coffee</option>
+                <option value="winter">Winter</option>
+                <option value="dim">Dim</option>
+                <option value="nord">Nord</option>
+                <option value="sunset">Sunset</option>
+            </select>
+        
+    </div>
+            </div>
+            <div class="p-6">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </main>
+    </div>
+</body>
+{% block scripts %}
+
+{% endblock %}
+</html>

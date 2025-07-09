@@ -1,0 +1,54 @@
+{% extends "dashboard/dashboard.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+<!-- Informasi Umum -->
+<div class="flex flex-col bg-base-100 rounded-lg shadow-sm border border-base-300 p-6 mb-6">
+    <h1 class="text-2xl font-bold text-base-content mb-2">Klasifikasi Sentimen</h1>
+    <p class="text-base-content/70">Proses klasifikasi teks menggunakan algoritma dan TF-IDF</p>
+
+    {% if accuracy %}
+    <div class="alert alert-success mt-4">
+        Akurasi model: <strong>{{ accuracy|floatformat:2 }}%</strong>
+    </div>
+    {% elif error %}
+    <div class="alert alert-error mt-4">
+        {{ error }}
+    </div>
+    {% endif %}
+</div>
+
+<!-- Tabel Classification Report -->
+<div class="bg-base-100 rounded-xl border border-base-300 shadow-sm">
+    <div class="p-6 border-b border-base-300">
+        <h2 class="text-xl font-bold text-base-content">📋 Classification Report</h2>
+        <p class="text-sm text-base-content/60 mt-1">Evaluasi performa klasifikasi berdasarkan precision, recall, dan f1-score.</p>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-base-200">
+                <tr>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-base-content/70 uppercase tracking-wider">Label</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-base-content/70 uppercase tracking-wider">Precision</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-base-content/70 uppercase tracking-wider">Recall</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-base-content/70 uppercase tracking-wider">F1-Score</th>
+                </tr>
+            </thead>
+            <tbody class="bg-base-100 divide-y divide-base-300 text-sm">
+                {% for label, metrics in report.items %}
+                    {% if metrics.precision %}
+                    <tr class="hover:bg-base-200 transition-colors duration-150">
+                        <td class="px-6 py-4 font-medium text-base-content">{{ label }}</td>
+                        <td class="px-6 py-4 text-base-content/80">{{ metrics.precision|floatformat:2 }}%</td>
+                        <td class="px-6 py-4 text-base-content/80">{{ metrics.recall|floatformat:2 }}%</td>
+                        <td class="px-6 py-4 text-base-content/80">{{ metrics|get_item:'f1-score'|floatformat:2 }}%</td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

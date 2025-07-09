@@ -1,0 +1,55 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+db.sqlite3
+media/
+staticfiles/
+local_settings.py
+
+# If using dotenv for secret keys
+.env
+
+# VSCode / IDE / OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Migration file conflict fix (optional)
+*/migrations/__pycache__/
+*/migrations/*.pyc
+
+# Pytest cache
+.pytest_cache/
+
+# Coverage reports
+htmlcov/
+coverage.xml
+*.cover
+
+# Jupyter Notebook (if used)
+.ipynb_checkpoints/
+
+# mypy
+.mypy_cache/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# If using docker
+*.pid
+*.sock
