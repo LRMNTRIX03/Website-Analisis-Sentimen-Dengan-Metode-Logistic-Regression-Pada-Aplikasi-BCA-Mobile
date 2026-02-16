@@ -24,3 +24,43 @@ Website ini adalah sistem analisis sentimen berbasis teks yang dibangun dengan *
 - **Translator**: deep_translator (GoogleTranslator)
 - **Frontend**: Tailwindcss, Alpine.js, dan DaisyUI
 
+## Tata Cara Menggunakan
+
+Ikuti langkah berikut untuk menjalankan project ini di lokal:
+
+---
+1. Clone Project
+```bash
+git clone https://github.com/username/nama-repo.git](https://github.com/LRMNTRIX03/Website-Analisis-Sentimen-Dengan-Metode-Logistic-Regression-Pada-Aplikasi-BCA-Mobile
+cd Website-Analisis-Sentimen-Dengan-Metode-Logistic-Regression-Pada-Aplikasi-BCA-Mobile
+```
+2. Buat Environment
+## Windows
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+## Mac/Linux
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+3. Setelah aktif instanll library python
+```bash
+pip install -r requirements.txt
+```
+4. Konfigurasi Database di Settings.py sesuaikan dengan db_anda
+5. Migrasi Database
+```bash
+python manage.py migrate
+```
+6. Buat superuser Admin
+```bash
+python manage.py createsuperuser
+```
+7. Jalankan server
+```bash
+python manage.py runserver
+```
+8. Buka server anda
+http://127.0.0.1:8000/
