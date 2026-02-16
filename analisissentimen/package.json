@@ -1,9 +1,14 @@
 {
-  "dependencies": {
-    "@tailwindcss/cli": "^4.1.10",
-    "tailwindcss": "^4.1.10"
-  },
   "scripts": {
-    "dev" : "npx tailwindcss -i ./static/src/style.css -o ./static/dist/output.css --watch"
+    "dev": "npx tailwindcss -i ./static/src/style.css -o ./static/dist/output.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.18",
+    "autoprefixer": "^10.4.24",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18"
+  },
+  "dependencies": {
+    "daisyui": "^5.5.18"
   }
 }
