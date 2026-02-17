@@ -35,12 +35,13 @@ git clone https://github.com/username/nama-repo.git](https://github.com/LRMNTRIX
 cd Website-Analisis-Sentimen-Dengan-Metode-Logistic-Regression-Pada-Aplikasi-BCA-Mobile
 ```
 2. **Buat Environment**
-## Windows
+
+**Windows**
 ```bash
 python -m venv venv
 venv\Scripts\activate
 ```
-## Mac/Linux
+**Mac/Linux**
 ```bash
 python3 -m venv venv
 source venv/bin/activate
